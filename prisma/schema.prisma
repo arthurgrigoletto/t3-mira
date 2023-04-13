@@ -12,17 +12,34 @@ generator client {
 }
 
 model Group {
-    id               String    @id @default(cuid())
+    id               String        @id @default(cuid())
     name             String
-    slug             String    @unique
+    slug             String        @unique
     administrator_id String
     event_date       DateTime?
     draw_date        DateTime?
     limit_value      Int?
-    start_value      Int?      @default(0)
-    created_at       DateTime  @default(now())
-    updated_at       DateTime  @updatedAt
+    start_value      Int?          @default(0)
+    created_at       DateTime      @default(now())
+    updated_at       DateTime      @updatedAt
+    participants     Participant[]
 
     @@index([administrator_id])
     @@map("groups")
+}
+
+model Participant {
+    id                 String   @id @default(cuid())
+    name               String
+    slug               String
+    email              String
+    resend_email_times Int      @default(0)
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
+
+    group    Group  @relation(fields: [group_id], references: [id])
+    group_id String
+
+    @@index([group_id])
+    @@map("participants")
 }

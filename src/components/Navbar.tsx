@@ -4,10 +4,13 @@ import { User } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
 
 import { Logo } from './Logo'
+import { api } from '~/utils/api'
+import { STALE_TIME } from '~/utils/contants'
 
 export function Navbar() {
   const { isLoaded, isSignedIn, user } = useUser()
   const { signOut } = useAuth()
+  const trpcContext = api.useContext()
 
   return (
     <menu
@@ -30,6 +33,14 @@ export function Navbar() {
               <Link
                 href="/groups"
                 className="hidden h-full items-center justify-center gap-2 rounded-2xl p-0 text-base font-bold text-primary-pureDark transition-colors hover:text-primary-dark focus:underline focus:decoration-dotted focus:underline-offset-4 focus:shadow-none focus:outline-none md:inline-flex"
+                onMouseEnter={() => {
+                  trpcContext.groups.getAll.prefetch(
+                    {
+                      email: user.primaryEmailAddress?.emailAddress,
+                    },
+                    { staleTime: STALE_TIME },
+                  )
+                }}
               >
                 Meus grupos
               </Link>
