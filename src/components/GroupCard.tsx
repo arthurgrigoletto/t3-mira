@@ -24,6 +24,37 @@ type GroupCardProps = {
 export function GroupCard({ group }: GroupCardProps) {
   const { user } = useUser()
   const trpcCtx = api.useContext()
+  const deleteGroupMutation = api.groups.delete.useMutation({
+    onMutate({ groupId }) {
+      const oldGroups = trpcCtx.groups.getAll.getData()
+
+      trpcCtx.groups.getAll.setData(
+        { email: user?.primaryEmailAddress?.emailAddress },
+        (data) => {
+          if (!data) {
+            return oldGroups
+          }
+
+          return {
+            groups: data.groups.filter((group) => group.id !== groupId),
+          }
+        },
+      )
+
+      return function rollback() {
+        trpcCtx.groups.getAll.setData(
+          { email: user?.primaryEmailAddress?.emailAddress },
+          oldGroups,
+        )
+      }
+    },
+    onError(_error, _variables, rollback) {
+      rollback && rollback()
+    },
+    async onSettled() {
+      await trpcCtx.groups.invalidate(undefined, { exact: true })
+    },
+  })
 
   return (
     <Link
@@ -82,7 +113,7 @@ export function GroupCard({ group }: GroupCardProps) {
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()
-            console.log('Apagar grupo')
+            deleteGroupMutation.mutate({ groupId: group.id })
           }}
         >
           Apagar grupo

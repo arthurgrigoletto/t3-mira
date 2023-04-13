@@ -36,4 +36,30 @@ export const groupsRouter = createTRPCRouter({
 
       return { group }
     }),
+  delete: privateProcedure
+    .input(z.object({ groupId: z.string().cuid().nonempty() }))
+    .mutation(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findUnique({
+        where: { id: input.groupId },
+      })
+
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+      }
+
+      if (group.administrator_id !== ctx.userId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Only administrators can delete groups',
+        })
+      }
+
+      await ctx.prisma.group.delete({
+        where: { id: group.id },
+      })
+
+      return {
+        group,
+      }
+    }),
 })
