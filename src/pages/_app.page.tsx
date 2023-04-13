@@ -34,7 +34,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       className={`${raleway.variable} flex h-[100svh] flex-col justify-between font-sans`}
     >
       <Navbar />
-      <main className="mb-10 mt-14 flex-shrink-0 flex-grow basis-auto p-4 md:mb-14 md:p-0">
+      <main className="flex-shrink-0 flex-grow basis-auto">
         <Component {...pageProps} />
       </main>
       <Footer />
