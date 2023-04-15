@@ -36,7 +36,9 @@ export function Navbar() {
                 onMouseEnter={() => {
                   trpcContext.groups.getAll.prefetch(
                     {
-                      email: user.primaryEmailAddress?.emailAddress,
+                      emails: user.emailAddresses.map(
+                        (email) => email.emailAddress,
+                      ),
                     },
                     { staleTime: STALE_TIME },
                   )

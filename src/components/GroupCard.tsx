@@ -59,7 +59,7 @@ export function GroupCard({ group }: GroupCardProps) {
   return (
     <Link
       key={group.id}
-      href={`/groups/${group.id}`}
+      href={`/groups/${group.slug}`}
       className="flex w-full flex-col gap-6 rounded-2xl bg-white p-6 shadow-default focus:outline-none focus:ring-2 focus:ring-primary-dark md:min-h-[330px] md:w-[534px]"
       onMouseEnter={() => {
         trpcCtx.groups.getBySlug.prefetch(
