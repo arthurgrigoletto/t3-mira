@@ -5,6 +5,7 @@ import {
   SignedIn,
   SignedOut,
 } from '@clerk/nextjs'
+import { ptBR } from '@clerk/localizations'
 import { Raleway } from 'next/font/google'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
@@ -22,7 +23,11 @@ const raleway = Raleway({
   variable: '--font-raleway',
 })
 
-const publicPages: Array<string> = ['/']
+const publicPages: Array<string> = [
+  '/',
+  '/sign-in/[[...index]]',
+  '/sign-up/[[...index]]',
+]
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const { pathname } = useRouter()
@@ -43,7 +48,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <>
-      <ClerkProvider {...pageProps}>
+      <ClerkProvider localization={ptBR} {...pageProps}>
         {isPublicPage ? (
           <Content />
         ) : (

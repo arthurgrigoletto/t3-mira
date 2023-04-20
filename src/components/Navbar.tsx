@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useAuth, SignInButton, SignUpButton, useUser } from '@clerk/nextjs'
+import { useAuth, useUser, SignInButton } from '@clerk/nextjs'
 import { User } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
 
@@ -63,11 +63,11 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <SignUpButton>
+              <Link href="/sign-up">
                 <button className="inline-flex h-10 w-32 items-center justify-center gap-2 rounded-2xl border-2 border-solid border-primary-pureDark px-2 py-4 text-base font-bold text-primary-pureDark transition-colors hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary-pureDark">
                   Cadastre-se
                 </button>
-              </SignUpButton>
+              </Link>
               <SignInButton>
                 <button className="inline-flex h-10 w-[75px] items-center justify-center gap-2 rounded-2xl bg-primary-pure px-2 py-4 text-base font-bold text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-2">
                   Login

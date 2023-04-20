@@ -1,16 +1,16 @@
-import { GetServerSideProps, type NextPage } from 'next'
+import { type NextPage } from 'next'
 import Link from 'next/link'
-import { getAuth, clerkClient } from '@clerk/nextjs/server'
+import { useUser } from '@clerk/nextjs'
 
 import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
 import { GroupCard } from '~/components/GroupCard'
-import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 
-const Groups: NextPage<{ emails?: string[] }> = ({ emails }) => {
+const Groups: NextPage = () => {
+  const { user } = useUser()
   const { data } = api.groups.getAll.useQuery(
     {
-      emails,
+      emails: user?.emailAddresses.map((email) => email.emailAddress),
     },
     { staleTime: STALE_TIME },
   )
@@ -37,25 +37,6 @@ const Groups: NextPage<{ emails?: string[] }> = ({ emails }) => {
       </div>
     </main>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { userId } = getAuth(req)
-  const user = userId ? await clerkClient.users.getUser(userId) : null
-  const ssg = generateSSGHelper({
-    userId,
-  })
-
-  const emails = user?.emailAddresses.map((email) => email.emailAddress)
-
-  await ssg.groups.getAll.prefetch({ emails })
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      emails,
-    },
-  }
 }
 
 export default Groups
