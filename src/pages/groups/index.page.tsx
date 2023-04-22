@@ -1,4 +1,4 @@
-import { type NextPage } from 'next'
+import { type GetServerSideProps, type NextPage } from 'next'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 
@@ -6,10 +6,12 @@ import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
 import { GroupCard } from '~/components/GroupCard'
 import Head from 'next/head'
+import { getAuth } from '@clerk/nextjs/server'
+import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 
 const Groups: NextPage = () => {
   const { user } = useUser()
-  const { data } = api.groups.getAll.useQuery(
+  const listGroupsQuery = api.groups.getAll.useQuery(
     {
       emails: user?.emailAddresses.map((email) => email.emailAddress),
     },
@@ -36,13 +38,28 @@ const Groups: NextPage = () => {
             Criar grupo
           </Link>
 
-          {data?.groups.map((group) => {
+          {listGroupsQuery.data?.groups.map((group) => {
             return <GroupCard key={group.id} group={group} />
           })}
         </div>
       </main>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { user, userId } = getAuth(req)
+  const ssg = generateSSGHelper(userId)
+
+  await ssg.groups.getAll.prefetch({
+    emails: user?.emailAddresses.map((email) => email.emailAddress),
+  })
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  }
 }
 
 export default Groups
