@@ -15,6 +15,7 @@ import { api } from '~/utils/api'
 import { Navbar } from '~/components/Navbar'
 import { Footer } from '~/components/Footer'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -35,15 +36,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const isPublicPage = publicPages.includes(pathname)
 
   const Content = () => (
-    <div
-      className={`${raleway.variable} flex h-[100svh] flex-col justify-between font-sans`}
-    >
-      <Navbar />
-      <main className="flex-shrink-0 flex-grow basis-auto">
-        <Component {...pageProps} />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Head>
+        <title>Nygma</title>
+      </Head>
+      <div
+        className={`${raleway.variable} flex h-[100svh] flex-col justify-between font-sans`}
+      >
+        <Navbar />
+        <main className="flex-shrink-0 flex-grow basis-auto">
+          <Component {...pageProps} />
+        </main>
+        <Footer />
+      </div>
+    </>
   )
 
   return (

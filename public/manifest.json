@@ -1,0 +1,21 @@
+{
+  "name": "Nygma",
+  "short_name": "Nygma",
+  "icons": [
+    {
+      "src": "/img/favicon/favicon-150x150.png",
+      "type": "image/png",
+      "sizes": "150x150"
+    },
+    {
+      "src": "/img/favicon/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "background_color": "#F3F5F8",
+  "description": "Nygma web app",
+  "display": "fullscreen",
+  "start_url": "/",
+  "theme_color": "#F3F5F8"
+}
