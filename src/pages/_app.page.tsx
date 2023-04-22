@@ -1,22 +1,22 @@
-import { type AppType } from 'next/app'
+import '~/styles/globals.css'
+
+import { ptBR } from '@clerk/localizations'
 import {
   ClerkProvider,
   RedirectToSignIn,
   SignedIn,
   SignedOut,
 } from '@clerk/nextjs'
-import { ptBR } from '@clerk/localizations'
-import { Raleway } from 'next/font/google'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
-import '~/styles/globals.css'
-
-import { api } from '~/utils/api'
-import { Navbar } from '~/components/Navbar'
-import { Footer } from '~/components/Footer'
-import { useRouter } from 'next/router'
+import { type AppType } from 'next/app'
+import { Raleway } from 'next/font/google'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+
+import { Footer } from '~/components/Footer'
+import { Navbar } from '~/components/Navbar'
 import { Toast } from '~/components/Toast'
+import { api } from '~/utils/api'
 
 const raleway = Raleway({
   subsets: ['latin'],

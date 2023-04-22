@@ -1,5 +1,5 @@
-import { NextPage } from 'next'
 import { SignIn as ClerkSignIn } from '@clerk/nextjs'
+import { NextPage } from 'next'
 
 const SignIn: NextPage = () => {
   return (

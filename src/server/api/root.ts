@@ -1,6 +1,6 @@
-import { createTRPCRouter } from '~/server/api/trpc'
 import { groupsRouter } from '~/server/api/routers/groups'
-import { participantsRouter } from './routers/participants'
+import { participantsRouter } from '~/server/api/routers/participants'
+import { createTRPCRouter } from '~/server/api/trpc'
 
 /**
  * This is the primary router for your server.

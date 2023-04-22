@@ -1,14 +1,14 @@
 import { getAuth } from '@clerk/nextjs/server'
+import { PlusCircle } from '@phosphor-icons/react'
 import { GetServerSideProps, type NextPage } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
 // import { useState } from 'react'
 
+import DrawImage from '~/assets/who.png'
 import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
-import DrawImage from '~/assets/who.png'
-import { PlusCircle } from '@phosphor-icons/react'
-import Head from 'next/head'
 
 const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
   // const [page, setPage] = useState(1)

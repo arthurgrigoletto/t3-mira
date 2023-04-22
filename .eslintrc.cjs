@@ -20,7 +20,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', 'jsx-a11y', '@typescript-eslint'],
+  plugins: [
+    'react',
+    'jsx-a11y',
+    '@typescript-eslint',
+    'eslint-plugin-import-helpers',
+  ],
   rules: {
     'prettier/prettier': [
       'error',
@@ -48,6 +53,14 @@ module.exports = {
     'jsx-a11y/aria-unsupported-elements': 'warn',
     'jsx-a11y/role-has-required-aria-props': 'warn',
     'jsx-a11y/role-supports-aria-props': 'warn',
+    'import-helpers/order-imports': [
+      'warn',
+      {
+        newlinesBetween: 'always',
+        groups: ['module', '/^~/', ['parent', 'sibling', 'index']],
+        alphabetize: { order: 'asc', ignoreCase: true },
+      },
+    ],
   },
   settings: {
     react: {

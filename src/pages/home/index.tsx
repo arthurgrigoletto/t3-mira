@@ -2,11 +2,11 @@ import { type NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Logo } from '~/components/Logo'
-import SwitchPresents from '~/assets/switch-presents.png'
+import Draw from '~/assets/draw.png'
 import FriendSelfie from '~/assets/friend-selfie.png'
 import Highfive from '~/assets/highfive.png'
-import Draw from '~/assets/draw.png'
+import SwitchPresents from '~/assets/switch-presents.png'
+import { Logo } from '~/components/Logo'
 
 const Home: NextPage = () => {
   return (
