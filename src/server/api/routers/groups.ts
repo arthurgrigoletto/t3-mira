@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+import { clerkClient } from '@clerk/nextjs/server'
 import { z } from 'zod'
 import { createTRPCRouter, privateProcedure } from '~/server/api/trpc'
 
@@ -32,10 +33,32 @@ export const groupsRouter = createTRPCRouter({
   getBySlug: privateProcedure
     .input(z.object({ slug: z.string().nonempty() }))
     .query(async ({ ctx, input }) => {
-      const group = ctx.prisma.group.findUnique({ where: { slug: input.slug } })
+      const group = await ctx.prisma.group.findUnique({
+        where: { slug: input.slug },
+        include: {
+          participants: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      })
 
       if (!group) {
         throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const user = await clerkClient.users.getUser(ctx.userId)
+      const isUserAdminOrParticipant =
+        group.administrator_id === ctx.userId ||
+        group.participants.some((participant) =>
+          user.emailAddresses.some(
+            (email) => email.emailAddress === participant.email,
+          ),
+        )
+
+      if (!isUserAdminOrParticipant) {
+        throw new TRPCError({ code: 'FORBIDDEN' })
       }
 
       return { group }

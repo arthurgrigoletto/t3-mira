@@ -42,16 +42,16 @@ const Me: NextPage = () => {
               navbar: 'hidden',
               header: 'hidden',
               profileSection__activeDevices: 'hidden',
-              card: 'shadow-default lg:max-w-[700px]',
+              card: 'shadow-default lg:max-w-[600px]',
             },
           }}
         />
         <Image
           src={Profile}
           alt="Garota olhando sua rede social no celular"
-          className="hidden h-[554px] flex-1 xl:block"
+          className="hidden h-[500px] flex-1 xl:block"
           width={647}
-          height={554}
+          height={500}
         />
       </div>
 

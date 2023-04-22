@@ -29,7 +29,7 @@ export function GroupCard({ group }: GroupCardProps) {
       const oldGroups = trpcCtx.groups.getAll.getData()
 
       trpcCtx.groups.getAll.setData(
-        { email: user?.primaryEmailAddress?.emailAddress },
+        { emails: user?.emailAddresses.map((email) => email.emailAddress) },
         (data) => {
           if (!data) {
             return oldGroups
@@ -43,7 +43,7 @@ export function GroupCard({ group }: GroupCardProps) {
 
       return function rollback() {
         trpcCtx.groups.getAll.setData(
-          { email: user?.primaryEmailAddress?.emailAddress },
+          { emails: user?.emailAddresses.map((email) => email.emailAddress) },
           oldGroups,
         )
       }

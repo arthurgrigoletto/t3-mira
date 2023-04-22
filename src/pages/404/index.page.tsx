@@ -6,7 +6,7 @@ import NotFoundImage from '~/assets/404.png'
 
 const NotFound: NextPage = () => {
   return (
-    <div className="container flex h-full flex-col items-center justify-center lg:flex-row lg:gap-12">
+    <div className="container mx-auto flex h-full flex-col items-center justify-center lg:flex-row lg:gap-12">
       <main className="flex flex-col items-center gap-6 pb-6 md:items-start">
         <h2 className="text-8xl font-bold">404</h2>
         <h2 className="text-center text-3.5xl font-bold md:text-left">
