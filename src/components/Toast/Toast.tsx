@@ -1,6 +1,7 @@
+import { XCircle, CheckCircle } from '@phosphor-icons/react'
 import * as ToastPrimitive from '@radix-ui/react-toast'
 import { clsx } from 'clsx'
-import { XCircle, CheckCircle } from '@phosphor-icons/react'
+
 import { ToastType, useToast } from './store'
 
 const icons = {

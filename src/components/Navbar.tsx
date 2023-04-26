@@ -1,11 +1,12 @@
-import Link from 'next/link'
 import { useAuth, useUser, SignInButton } from '@clerk/nextjs'
 import { User } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
+import Link from 'next/link'
 
-import { Logo } from './Logo'
 import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
+
+import { Logo } from './Logo'
 
 export function Navbar() {
   const { isLoaded, isSignedIn, user } = useUser()

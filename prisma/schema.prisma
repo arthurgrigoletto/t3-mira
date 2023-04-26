@@ -12,19 +12,20 @@ generator client {
 }
 
 model Group {
-    id               String        @id @default(cuid())
-    name             String
-    slug             String        @unique
-    administrator_id String
-    event_date       DateTime?
-    draw_date        DateTime?
-    limit_value      Int?
-    start_value      Int?          @default(0)
-    created_at       DateTime      @default(now())
-    updated_at       DateTime      @updatedAt
-    participants     Participant[]
+    id                  String        @id @default(cuid())
+    name                String
+    slug                String        @unique
+    administrator_id    String
+    administrator_email String
+    event_date          DateTime?
+    draw_date           DateTime?
+    limit_value         Int?
+    start_value         Int?          @default(0)
+    created_at          DateTime      @default(now())
+    updated_at          DateTime      @updatedAt
+    participants        Participant[]
 
-    @@index([administrator_id])
+    @@index([administrator_id, administrator_email])
     @@map("groups")
 }
 

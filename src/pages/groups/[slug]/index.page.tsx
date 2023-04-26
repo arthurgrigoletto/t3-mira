@@ -1,8 +1,11 @@
+import { useUser } from '@clerk/nextjs'
 import { getAuth } from '@clerk/nextjs/server'
-import { PlusCircle } from '@phosphor-icons/react'
+import { DotsThree, Gift, PlusCircle } from '@phosphor-icons/react'
 import { GetServerSideProps, type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useMemo } from 'react'
 // import { useState } from 'react'
 
 import DrawImage from '~/assets/who.png'
@@ -10,8 +13,11 @@ import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
 
+import { ParticipantCard } from './ParticipantCard'
+
 const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
   // const [page, setPage] = useState(1)
+  const { user } = useUser()
   const groupQuery = api.groups.getBySlug.useQuery(
     {
       slug,
@@ -25,6 +31,8 @@ const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
     },
     { staleTime: STALE_TIME },
   )
+  const giftsBaseUrl = useMemo(() => `/groups/${slug}/gifts`, [slug])
+  const isAdministrator = user?.id === groupQuery.data?.group.administrator_id
 
   return (
     <>
@@ -93,6 +101,21 @@ const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
               <PlusCircle size={24} weight="fill" />
               Adicionar participante
             </button>
+          </div>
+          <div className="flex w-full max-w-[703px] flex-col gap-2">
+            {participantsQuery.data?.result.map((participant) => {
+              return (
+                <ParticipantCard
+                  key={participant.id}
+                  participant={participant}
+                  administratorEmail={
+                    groupQuery.data?.group.administrator_email
+                  }
+                  giftsBaseUrl={giftsBaseUrl}
+                  isAdministrator={isAdministrator}
+                />
+              )
+            })}
           </div>
           <span className="text-base font-semibold text-primary-pure">
             {participantsQuery.data?.count} participantes

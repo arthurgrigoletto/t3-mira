@@ -1,5 +1,5 @@
-import { create } from 'zustand'
 import { v4 as uuid } from 'uuid'
+import { create } from 'zustand'
 
 export enum ToastType {
   SUCCESS = 'SUCCESS',
