@@ -1,23 +1,23 @@
 import { useUser } from '@clerk/nextjs'
 import { getAuth } from '@clerk/nextjs/server'
-import { DotsThree, Gift, PlusCircle } from '@phosphor-icons/react'
+import { PlusCircle } from '@phosphor-icons/react'
 import { GetServerSideProps, type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useMemo } from 'react'
-// import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import DrawImage from '~/assets/who.png'
 import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 import { api } from '~/utils/api'
 import { STALE_TIME } from '~/utils/contants'
 
+import { Pagination } from './Pagination'
 import { ParticipantCard } from './ParticipantCard'
 
 const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
-  // const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1)
   const { user } = useUser()
+  const trpcCtx = api.useContext()
   const groupQuery = api.groups.getBySlug.useQuery(
     {
       slug,
@@ -27,12 +27,16 @@ const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
   const participantsQuery = api.participants.getAll.useQuery(
     {
       groupSlug: slug,
-      page: 1,
+      page,
     },
-    { staleTime: STALE_TIME },
+    { staleTime: STALE_TIME, keepPreviousData: true },
   )
   const giftsBaseUrl = useMemo(() => `/groups/${slug}/gifts`, [slug])
   const isAdministrator = user?.id === groupQuery.data?.group.administrator_id
+
+  useEffect(() => {
+    trpcCtx.participants.getAll.prefetch({ groupSlug: slug, page: page + 1 })
+  }, [page, slug, trpcCtx.participants.getAll])
 
   return (
     <>
@@ -117,9 +121,11 @@ const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
               )
             })}
           </div>
-          <span className="text-base font-semibold text-primary-pure">
-            {participantsQuery.data?.count} participantes
-          </span>
+          <Pagination
+            totalCountOfResults={participantsQuery.data?.count}
+            onPageChange={setPage}
+            currentPage={page}
+          />
         </main>
       </div>
     </>
