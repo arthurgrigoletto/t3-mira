@@ -8,17 +8,13 @@ import { useRouter } from 'next/router'
 import Profile from '~/assets/profile.png'
 import { GroupCard } from '~/components/GroupCard'
 import { api } from '~/utils/api'
-import { STALE_TIME } from '~/utils/contants'
 
 const Me: NextPage = () => {
   const { back } = useRouter()
   const { user } = useUser()
-  const groupsQuery = api.groups.getAll.useQuery(
-    {
-      emails: user?.emailAddresses.map((email) => email.emailAddress),
-    },
-    { staleTime: STALE_TIME },
-  )
+  const groupsQuery = api.groups.getAll.useQuery({
+    emails: user?.emailAddresses.map((email) => email.emailAddress),
+  })
 
   return (
     <>

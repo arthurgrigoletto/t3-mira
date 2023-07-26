@@ -62,8 +62,6 @@ export const groupsRouter = createTRPCRouter({
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
 
-      console.log({ group })
-
       return { group }
     }),
   delete: privateProcedure

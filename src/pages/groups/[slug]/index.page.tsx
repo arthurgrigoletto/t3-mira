@@ -4,32 +4,51 @@ import { PlusCircle } from '@phosphor-icons/react'
 import { GetServerSideProps, type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 
 import DrawImage from '~/assets/who.png'
+import { dayjs } from '~/lib/dayjs'
 import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 import { api } from '~/utils/api'
-import { STALE_TIME } from '~/utils/contants'
+import { formatCurrency } from '~/utils/formatters'
 
 import { Pagination } from './Pagination'
 import { ParticipantCard } from './ParticipantCard'
 
-const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
+export const getGiftValueString = ({
+  limitValue,
+  startValue,
+}: {
+  limitValue?: number | null
+  startValue?: number | null
+}): string => {
+  if (!limitValue) {
+    return 'sem limite'
+  }
+
+  if (!startValue) {
+    return `até ${formatCurrency(limitValue)}`
+  }
+
+  return `${formatCurrency(startValue)} - ${formatCurrency(limitValue)}`
+}
+
+const SingleGroupPage: NextPage = () => {
+  const router = useRouter()
+  const slug = router.query.slug as string
   const [page, setPage] = useState(1)
   const { user } = useUser()
   const trpcCtx = api.useContext()
-  const groupQuery = api.groups.getBySlug.useQuery(
-    {
-      slug,
-    },
-    { staleTime: STALE_TIME },
-  )
+  const groupQuery = api.groups.getBySlug.useQuery({
+    slug,
+  })
   const participantsQuery = api.participants.getAll.useQuery(
     {
       groupSlug: slug,
       page,
     },
-    { staleTime: STALE_TIME, keepPreviousData: true },
+    { keepPreviousData: true },
   )
   const giftsBaseUrl = useMemo(() => `/groups/${slug}/gifts`, [slug])
   const isAdministrator = user?.id === groupQuery.data?.group.administrator_id
@@ -52,15 +71,24 @@ const SingleGroupPage: NextPage<{ slug: string }> = ({ slug }) => {
             <div className="flex flex-col gap-2">
               <p className="text-base lining-nums">
                 <strong className="font-semibold">Data do evento:</strong>{' '}
-                25/12/2023
+                {groupQuery.data?.group.event_date
+                  ? dayjs(groupQuery.data?.group.event_date).format(
+                      'DD/MM/YYYY',
+                    )
+                  : 'não informado'}
               </p>
               <p className="text-base lining-nums">
                 <strong className="font-semibold">Data do sorteio:</strong>{' '}
-                25/12/2023
+                {groupQuery.data?.group.draw_date
+                  ? dayjs(groupQuery.data?.group.draw_date).format('DD/MM/YYYY')
+                  : 'não realizado'}
               </p>
               <p className="text-base lining-nums">
-                <strong className="font-semibold">Valor do presente:</strong> R$
-                40 - 50
+                <strong className="font-semibold">Valor do presente: </strong>
+                {getGiftValueString({
+                  limitValue: groupQuery.data?.group.limit_value,
+                  startValue: groupQuery.data?.group.start_value,
+                })}
               </p>
               <button className="mt-2 w-fit text-base font-bold text-primary-pureDark">
                 Editar

@@ -11,6 +11,8 @@ import superjson from 'superjson'
 
 import { type AppRouter } from '~/server/api/root'
 
+import { STALE_TIME } from './contants'
+
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') return '' // browser should use relative url
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}` // SSR should use vercel url
@@ -21,6 +23,13 @@ const getBaseUrl = () => {
 export const api = createTRPCNext<AppRouter>({
   config() {
     return {
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: STALE_TIME,
+          },
+        },
+      },
       /**
        * Transformer used for data de-serialization from the server.
        *

@@ -3,7 +3,6 @@ import { DotsThree } from '@phosphor-icons/react'
 import Link from 'next/link'
 
 import { api } from '~/utils/api'
-import { STALE_TIME } from '~/utils/contants'
 
 type GroupCardProps = {
   group: {
@@ -63,10 +62,7 @@ export function GroupCard({ group }: GroupCardProps) {
       href={`/groups/${group.slug}`}
       className="flex w-full flex-col gap-6 rounded-2xl bg-white p-6 shadow-default focus:outline-none focus:ring-2 focus:ring-primary-dark md:min-h-[330px] md:w-[534px]"
       onMouseEnter={() => {
-        trpcCtx.groups.getBySlug.prefetch(
-          { slug: group.slug },
-          { staleTime: STALE_TIME },
-        )
+        trpcCtx.groups.getBySlug.prefetch({ slug: group.slug })
       }}
     >
       <h3 className="text-2xl font-bold leading-9">{group.name}</h3>

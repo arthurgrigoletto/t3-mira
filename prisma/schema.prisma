@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -24,6 +24,7 @@ model Group {
     created_at          DateTime      @default(now())
     updated_at          DateTime      @updatedAt
     participants        Participant[]
+    gifts               Gift[]
 
     @@index([administrator_id, administrator_email])
     @@map("groups")
@@ -41,6 +42,26 @@ model Participant {
     group    Group  @relation(fields: [group_id], references: [id], onDelete: Cascade)
     group_id String
 
+    gifts Gift[]
+
     @@index([group_id])
     @@map("participants")
+}
+
+model Gift {
+    id         String   @id @default(cuid())
+    favorite   Boolean? @default(false)
+    name       String
+    url        String?
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    participant_id String
+    participant    Participant @relation(fields: [participant_id], references: [id])
+
+    group_id String
+    group    Group  @relation(fields: [group_id], references: [id])
+
+    @@index([group_id, participant_id])
+    @@map("gifts")
 }

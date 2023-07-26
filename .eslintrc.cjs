@@ -61,6 +61,7 @@ module.exports = {
         alphabetize: { order: 'asc', ignoreCase: true },
       },
     ],
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
   settings: {
     react: {

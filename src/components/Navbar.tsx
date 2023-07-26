@@ -4,7 +4,6 @@ import { clsx } from 'clsx'
 import Link from 'next/link'
 
 import { api } from '~/utils/api'
-import { STALE_TIME } from '~/utils/contants'
 
 import { Logo } from './Logo'
 
@@ -35,14 +34,11 @@ export function Navbar() {
                 href="/groups"
                 className="hidden h-full items-center justify-center gap-2 rounded-2xl p-0 text-base font-bold text-primary-pureDark transition-colors hover:text-primary-dark focus:underline focus:decoration-dotted focus:underline-offset-4 focus:shadow-none focus:outline-none md:inline-flex"
                 onMouseEnter={() => {
-                  trpcContext.groups.getAll.prefetch(
-                    {
-                      emails: user.emailAddresses.map(
-                        (email) => email.emailAddress,
-                      ),
-                    },
-                    { staleTime: STALE_TIME },
-                  )
+                  trpcContext.groups.getAll.prefetch({
+                    emails: user.emailAddresses.map(
+                      (email) => email.emailAddress,
+                    ),
+                  })
                 }}
               >
                 Meus grupos

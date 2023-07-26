@@ -7,16 +7,12 @@ import Link from 'next/link'
 import { GroupCard } from '~/components/GroupCard'
 import { generateSSGHelper } from '~/server/helpers/ssgHelper'
 import { api } from '~/utils/api'
-import { STALE_TIME } from '~/utils/contants'
 
 const Groups: NextPage = () => {
   const { user } = useUser()
-  const listGroupsQuery = api.groups.getAll.useQuery(
-    {
-      emails: user?.emailAddresses.map((email) => email.emailAddress),
-    },
-    { staleTime: STALE_TIME },
-  )
+  const listGroupsQuery = api.groups.getAll.useQuery({
+    emails: user?.emailAddresses.map((email) => email.emailAddress),
+  })
 
   return (
     <>

@@ -49,4 +49,37 @@ export const participantsRouter = createTRPCRouter({
         totalPages: Math.ceil(count / PAGE_LIMIT),
       }
     }),
+  getBySlug: privateProcedure
+    .input(
+      z.object({
+        participantSlug: z.string().nonempty(),
+        groupSlug: z.string().nonempty(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findUnique({
+        where: {
+          slug: input.groupSlug,
+        },
+      })
+
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const participant = await ctx.prisma.participant.findFirst({
+        where: {
+          slug: input.participantSlug,
+          group_id: group.id,
+        },
+      })
+
+      if (!participant) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return {
+        participant,
+      }
+    }),
 })
